@@ -1,0 +1,51 @@
+import kotlin.random.Random
+
+fun main() {
+    println("Игра 'Быки и коровы'!")
+    println("Вам требуется отгадать 4-значное число, с неповторяющимися цифрами")
+    println("Быки - это верно угаданные цифры, которые стоят на своих местах")
+    println("Коровы - это верно угаданные цифры, но они стоят не на своих местах\n")
+    println("Компьютер загадал 4-значное число. Отгадывайте)")
+
+    val secretnum = generateSecretnum()
+    var tryy = 0
+
+    while (true) {
+        print("Какое число загадал компьютер?(4 цифры): ")
+        val guess = readLine()
+        if (guess != null && guess.length == 4 ) {
+            tryy++
+            val result = checkGuess(guess, secretnum)
+            println("Увы, Вы не отгадали. Результат $tryy попытки : $result")
+            if (result == "4 бык(а), 0 корова(ы)") {
+                println("Вы сумели отгадать число за $tryy попыток! ")
+                break
+            }
+        } else {
+            println("Некорректный ввод. Пожалуйста, введите 4 цифры.")
+        }
+    }
+}
+
+
+fun generateSecretnum(): String {
+    val digits = mutableListOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+    digits.shuffle()
+    return digits.subList(0, 4).joinToString("")
+}
+
+fun checkGuess(guess: String, secretnum: String): String {
+    var bulls = 0
+    var cows = 0
+
+    for (i in guess.indices) {
+        if (guess[i] == secretnum[i]) {
+            bulls++
+        } else if (secretnum.contains(guess[i])) {
+            cows++
+        }
+    }
+
+    return "$bulls бык(а), $cows корова(ы)"
+}
+
